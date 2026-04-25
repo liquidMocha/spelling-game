@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Phonics Car Pal</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f9ff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+            touch-action: manipulation;
+        }
+
+        #target-word {
+            font-size: 2.5rem;
+            background: #fff;
+            padding: 20px 40px;
+            border-radius: 20px;
+            box-shadow: 0 8px 0 #cbd5e1;
+            margin-bottom: 30px;
+            color: #334155;
+            border: 4px solid #38bdf8;
+        }
+
+        #slots {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 40px;
+        }
+
+        .slot {
+            width: 60px;
+            height: 80px;
+            border: 3px dashed #94a3b8;
+            border-radius: 12px;
+            background: #f8fafc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #0369a1;
+        }
+
+        #letter-tray {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            background: #e0f2fe;
+            padding: 20px;
+            border-radius: 24px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .letter-card {
+            background: white;
+            border: none;
+            border-radius: 12px;
+            padding: 15px;
+            font-size: 1.8rem;
+            font-weight: bold;
+            box-shadow: 0 5px 0 #bae6fd;
+            color: #0c4a6e;
+            cursor: pointer;
+            active { transform: translateY(4px); box-shadow: none; }
+        }
+
+        .success { border-color: #4ade80 !important; color: #166534 !important; }
+    </style>
+</head>
+<body>
+
+    <div id="target-word">P A N</div>
+
+    <div id="slots">
+        <div class="slot" id="s0"></div>
+        <div class="slot" id="s1"></div>
+        <div class="slot" id="s2"></div>
+    </div>
+
+    <div id="letter-tray">
+        <button class="letter-card" onclick="pick('P')">P</button>
+        <button class="letter-card" onclick="pick('A')">A</button>
+        <button class="letter-card" onclick="pick('N')">N</button>
+        <button class="letter-card" onclick="pick('T')">T</button>
+        <button class="letter-card" onclick="pick('S')">S</button>
+        <button class="letter-card" onclick="pick('I')">I</button>
+        <button class="letter-card" onclick="pick('D')">D</button>
+        <button class="letter-card" onclick="pick('Z')">Z</button>
+    </div>
+
+    <button onclick="reset()" style="margin-top: 30px; padding: 10px 20px; border-radius: 10px; border: none; background: #64748b; color: white;">Clear</button>
+
+    <script>
+        const target = "PAN";
+        let currentGuess = "";
+
+        function speak(text) {
+            const msg = new SpeechSynthesisUtterance(text);
+            msg.rate = 0.9;
+            window.speechSynthesis.speak(msg);
+        }
+
+        function pick(letter) {
+            if (currentGuess.length < target.length) {
+                currentGuess += letter;
+                document.getElementById(`s${currentGuess.length - 1}`).innerText = letter;
+                speak(letter);
+
+                if (currentGuess === target) {
+                    setTimeout(() => {
+                        speak("Great job! Pan!");
+                        document.querySelectorAll('.slot').forEach(s => s.classList.add('success'));
+                    }, 500);
+                }
+            }
+        }
+
+        function reset() {
+            currentGuess = "";
+            document.querySelectorAll('.slot').forEach(s => {
+                s.innerText = "";
+                s.classList.remove('success');
+            });
+        }
+    </script>
+</body>
+</html>
